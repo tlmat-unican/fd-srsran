@@ -21,7 +21,11 @@ sudo apt-get install build-essential cmake libfftw3-dev libmbedtls-dev libboost-
 
 # Contact
 Cristian C. Erazo-Agredo [email](cristian.erazo@cinvestav.mx). [Center for Research a AdvancedStudies, CINVESTAV](https://www.cinvestav.mx/)
+
 Luis Diez;  [email](mailto:ldiez@tlmat.unican.es). [University of Cantabria](https://web.unican.es/)
+
 Mario Garza-Fabre [email](mario.garza@cinvestav.mx). [Center for Research a AdvancedStudies, CINVESTAV](https://www.cinvestav.mx/)
+
 Javier Rubio-Loyola [email](javier.rubio@cinvestav.mx). [Center for Research a AdvancedStudies, CINVESTAV](https://www.cinvestav.mx/)
+
 Ramón Agüero; [email](mailto:ramon@tlmat.unican.es). [University of Cantabria](https://web.unican.es/)

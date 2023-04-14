@@ -1,0 +1,14 @@
+build
+CMakeCache.txt
+logs
+__pycache__
+CMakeFiles
+*.log
+./funscplit_proto/*.cc
+./funscplit_proto/*.h
+./srsenb/src/funscplit_proto/*.cc
+./srsenb/hdr/funscplit_proto/*.h
+*.crash
+results*/
+*.csv
+*.dat

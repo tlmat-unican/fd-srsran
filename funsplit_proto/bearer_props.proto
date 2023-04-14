@@ -1,0 +1,9 @@
+syntax = "proto3";
+package fs.gtpu_rrc;
+
+message bearer_props {
+  bool forward_from_teidin_present = 1;
+  bool flush_before_teidin_present = 2;
+  uint32 forward_from_teidin       = 3;
+  uint32 flush_from_teidin         = 4;
+}

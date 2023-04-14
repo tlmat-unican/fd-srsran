@@ -1,0 +1,67 @@
+syntax = "proto3";
+package fs.mac_phy;
+
+import "phy_mac.proto";
+
+message srsran_dci_ul_t {
+    bool                              cqi_request = 1;
+    bool                              is_tdd = 2;
+    bool                              cif_present = 3;
+    bool                              multiple_csi_request_present = 4;
+    bool                              srs_request = 5;
+    bool                              srs_request_present = 6;
+    bool                              ra_type_present = 7;
+    uint32                            rnti = 8;
+    uint32                            ue_cc_idx = 9;
+    uint32                            n_dmrs = 10;
+    uint32                            dai = 11;
+    uint32                            ul_idx = 12;
+    uint32                            tpc_pusch = 13;
+    uint32                            cif = 14;
+    uint32                            multiple_csi_request = 15;
+    int32                       freq = 16;
+    int32    format = 17;
+    fs.phy_mac.srsran_dci_location_t  location = 18;
+    fs.phy_mac.srsran_ra_type2_t      type2_alloc = 19;
+    fs.phy_mac.srsran_dci_tb_t        tb = 20;
+    int32       ra_type = 21;
+}
+
+message ul_sched_ack_t {
+    bool         ack = 1;
+    uint32       rnti = 2;
+}
+
+message raw_buffer{
+    bytes data = 1;
+}
+
+message srsran_softbuffer_rx_t {
+  uint32             max_cb = 1;
+  uint32             max_cb_size = 2;
+  repeated raw_buffer buffer_f = 3;
+  repeated raw_buffer data = 4;
+  repeated bool      cb_crc = 5;
+  bool               tb_crc = 6;    
+}
+
+message ul_sched_grant_t {
+    srsran_dci_ul_t                     dci = 1;
+    uint32                              pid = 2;
+    uint32                              current_tx_nb = 3;
+    bytes                               data = 4;
+    bool                                needs_pdcch = 5;
+    srsran_softbuffer_rx_t              softbuffer_rx = 6;
+    uint32                              data_len=7;   
+}
+
+message ul_sched_t {
+    repeated ul_sched_grant_t   pusch = 1;
+    repeated ul_sched_ack_t     phich = 2;
+    uint32                      nof_grants = 3;
+    uint32                      nof_phich = 4;
+}
+
+message ul_sched_list_t {
+    repeated ul_sched_t  list = 1;
+}

@@ -1,0 +1,11 @@
+syntax = "proto3";
+package fs.pdcp_rrc;
+
+message pdcp_lte_state_t {
+  uint32 next_pdcp_tx_sn = 1;
+  uint32 tx_hfn = 2;
+  uint32 rx_hfn = 3;
+  uint32 next_pdcp_rx_sn = 4 ;
+  uint32 last_submitted_pdcp_rx_sn = 5;
+  uint32 reordering_pdcp_rx_count = 6;
+}

@@ -1,0 +1,103 @@
+//  SE PUEDE OPTIMIZAR //
+
+
+/* NOTAS:
+ * El uint8_t no existe en ProtoBuffer... en su lugar podemos usar bytes
+ * En el enumerado pdcp_t_reordering_t he tenido que poner ms_XX porque sino hay conflicto de nombres con pdcp_discard_timer_t
+ * En los enumerados de los msXX he cambiado los valores por identificadores y he puesto el de infinity el '1º'
+ * El enumerado srsran_rat_t está en common... no sé como hacer para poder importarlo de ahí sin que dé problemas...
+ */
+
+syntax = "proto3";
+package fs.pdcp_rrc;
+
+// import "common.proto"; 
+
+enum  pdcp_rb_type_t {
+  PDCP_RB_IS_SRB = 0;
+  PDCP_RB_IS_DRB = 1;
+}
+
+enum security_direction_t {
+  SECURITY_DIRECTION_UPLINK = 0;
+  SECURITY_DIRECTION_DOWNLINK = 1;
+  SECURITY_DIRECTION_N_ITEMS = 2;
+}
+
+enum pdcp_t_reordering_t {
+  ms_0    = 0;
+  ms_1    = 1;
+  ms_2    = 2;
+  ms_4    = 4;
+  ms_5    = 5;
+  ms_8    = 6;
+  ms_10   = 7;
+  ms_15   = 8;
+  ms_20   = 9;
+  ms_30   = 10;
+  ms_40   = 11;
+  ms_50   = 12;
+  ms_60   = 13;
+  ms_80   = 14;
+  ms_100  = 15;
+  ms_120  = 16;
+  ms_140  = 17;
+  ms_160  = 18;
+  ms_180  = 19;
+  ms_200  = 20;
+  ms_220  = 21;
+  ms_240  = 22;
+  ms_260  = 23;
+  ms_280  = 24;
+  ms_300  = 25;
+  ms_500  = 26;
+  ms_750  = 27;
+  ms_1000 = 28;
+  ms_1250 = 29;
+  ms_1500 = 30;
+  ms_1750 = 31;
+  ms_2000 = 32;
+  ms_2250 = 33;
+  ms_2500 = 34;
+  ms_2750 = 35;
+  ms_3000 = 36;
+}
+
+enum pdcp_discard_timer_t {
+  ms10     = 0;
+  ms20     = 1;
+  ms30     = 2;
+  ms40     = 3;
+  ms50     = 4;
+  ms60     = 5;
+  ms75     = 6;
+  ms100    = 7;
+  ms150    = 8;
+  ms200    = 9;
+  ms250    = 10;
+  ms300    = 11;
+  ms500    = 12;
+  ms750    = 13;
+  ms1500   = 14; 
+  infinity = 15;
+}
+
+
+enum srsran_rat_t {
+  lte = 0;
+  nr = 1;
+  nulltype = 2;
+}
+
+
+message pdcp_config_t {
+  uint32 bearer_id_ = 1;  
+  pdcp_rb_type_t rb_type_ = 2; 
+  security_direction_t tx_direction_ = 3; 
+  security_direction_t rx_direction_ = 4; 
+  uint32 sn_len_ = 5;  /* uint8_t*/
+  pdcp_t_reordering_t t_reordering_ = 6; 
+  pdcp_discard_timer_t discard_timer_ = 7; 
+  bool status_report_required_ = 8; 
+  srsran_rat_t rat_ = 9; 
+}

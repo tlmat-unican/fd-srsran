@@ -1,0 +1,31 @@
+syntax = "proto3";
+package fs.pdcp_rrc;
+
+enum INTEGRITY_ALGORITHM_ID_ENUM {
+  INTEGRITY_ALGORITHM_ID_EIA0     = 0;
+  INTEGRITY_ALGORITHM_ID_128_EIA1 = 1;
+  INTEGRITY_ALGORITHM_ID_128_EIA2 = 2;
+  INTEGRITY_ALGORITHM_ID_128_EIA3 = 3;
+  INTEGRITY_ALGORITHM_ID_N_ITEMS  = 4;
+}
+
+enum CIPHERING_ALGORITHM_ID_ENUM {
+  CIPHERING_ALGORITHM_ID_EEA0     = 0;
+  CIPHERING_ALGORITHM_ID_128_EEA1 = 1;
+  CIPHERING_ALGORITHM_ID_128_EEA2 = 2;
+  CIPHERING_ALGORITHM_ID_128_EEA3 = 3;
+  CIPHERING_ALGORITHM_ID_N_ITEMS  = 4;
+}
+
+message as_key_t {
+  bytes key = 1;
+}
+
+message as_security_config_t {
+  as_key_t k_rrc_int = 1;
+  as_key_t k_rrc_enc = 2;
+  as_key_t k_up_int = 3;
+  as_key_t k_up_enc = 4;
+  INTEGRITY_ALGORITHM_ID_ENUM integ_algo = 5;
+  CIPHERING_ALGORITHM_ID_ENUM cipher_algo = 6;
+} 

@@ -1,0 +1,21 @@
+syntax = "proto3";
+package fs.common;
+
+enum rlc_umd_sn_size_t{
+  size5bits = 0;
+  size10bits = 1;
+  nulltype = 2;
+} 
+
+enum srsran_rat_t { 
+  lte = 1;
+  nr = 2; 
+  nulltype = 3;
+}
+
+enum rlc_mode_t { 
+  tm = 1;
+  um = 2; 
+  am = 3; 
+  nulltype = 4; 
+}

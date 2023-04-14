@@ -1,0 +1,303 @@
+syntax = "proto3";
+package fs.mac_rrc;
+
+enum DIRECTION_T {
+  DIRECTION_T_IDLE = 0;
+  DIRECTION_T_UL = 1;
+  DIRECTION_T_DL = 2;
+  DIRECTION_T_BOTH = 3;
+}
+
+enum srsran_pucch_format_t {// SRSRAN_API
+  SRSRAN_PUCCH_FORMAT_1 = 0;
+  SRSRAN_PUCCH_FORMAT_1A = 1;
+  SRSRAN_PUCCH_FORMAT_1B = 2;
+  SRSRAN_PUCCH_FORMAT_2 = 3;
+  SRSRAN_PUCCH_FORMAT_2A = 4;
+  SRSRAN_PUCCH_FORMAT_2B = 5;
+  SRSRAN_PUCCH_FORMAT_3 = 6;
+  SRSRAN_PUCCH_FORMAT_ERROR = 7;
+}
+
+enum srsran_ack_nack_feedback_mode_t {
+  SRSRAN_PUCCH_ACK_NACK_FEEDBACK_MODE_NORMAL = 0; // No cell selection no pucch3
+  SRSRAN_PUCCH_ACK_NACK_FEEDBACK_MODE_CS = 1;
+  SRSRAN_PUCCH_ACK_NACK_FEEDBACK_MODE_PUCCH3 = 2;
+  SRSRAN_PUCCH_ACK_NACK_FEEDBACK_MODE_ERROR = 3;
+}
+
+enum srsran_cqi_type_t {
+  SRSRAN_CQI_TYPE_WIDEBAND = 0;
+  SRSRAN_CQI_TYPE_SUBBAND = 1;
+  SRSRAN_CQI_TYPE_SUBBAND_UE = 2;
+  SRSRAN_CQI_TYPE_SUBBAND_HL = 3;
+}
+
+enum srsran_tm_t {//SRSRAN_API
+  SRSRAN_TM1 = 0;
+  SRSRAN_TM2 = 1;
+  SRSRAN_TM3 = 2;
+  SRSRAN_TM4 = 3;
+  SRSRAN_TM5 = 4;
+  SRSRAN_TM6 = 5;
+  SRSRAN_TM7 = 6;
+  SRSRAN_TM8 = 7;
+  SRSRAN_TMINV = 8;// Invalid Transmission Mode
+}
+
+enum srsran_mimo_decoder_t {// SRSRAN_API
+  SRSRAN_MIMO_DECODER_ZF = 0;
+  SRSRAN_MIMO_DECODER_MMSE = 1;
+}
+
+enum srsran_mod_t {// SRSRAN_API
+  SRSRAN_MOD_BPSK = 0;     /*!< \brief BPSK. */
+  SRSRAN_MOD_QPSK = 1;     /*!< \brief QPSK. */
+  SRSRAN_MOD_16QAM = 2;    /*!< \brief QAM16. */
+  SRSRAN_MOD_64QAM = 3;    /*!< \brief QAM64. */
+  SRSRAN_MOD_256QAM = 4;   /*!< \brief QAM256. */
+  SRSRAN_MOD_NITEMS = 5;
+}
+
+enum srsran_tx_scheme_t {// SRSRAN_API
+  SRSRAN_TXSCHEME_PORT0 = 0;
+  SRSRAN_TXSCHEME_DIVERSITY = 1;
+  SRSRAN_TXSCHEME_SPATIALMUX = 2;
+  SRSRAN_TXSCHEME_CDD = 3;
+}
+
+enum srsran_cqi_report_mode_t {
+  SRSRAN_CQI_MODE_10 = 0;
+  SRSRAN_CQI_MODE_11 = 1;
+  SRSRAN_CQI_MODE_12 = 2;
+  SRSRAN_CQI_MODE_20 = 3;
+  SRSRAN_CQI_MODE_21 = 4;
+  SRSRAN_CQI_MODE_22 = 5;
+  SRSRAN_CQI_MODE_30 = 6;
+  SRSRAN_CQI_MODE_31 = 7;
+  SRSRAN_CQI_MODE_NA = 8;
+}
+
+enum UL64QAM_CAP{// ul64qam_cap
+  UL64QAM_CAP_UNDEFINED = 0;//undefined
+  UL64QAM_CAP_DISABLED = 1;//disabled
+  UL64QAM_CAP_ENABLED =2;//enabled
+}
+
+enum TX_MODE_T {
+  TM1 = 0;
+  TM2 = 1;
+  TM3 = 2;
+  TM4 = 3;
+  TM5 = 4;
+  TM6 = 5;
+  TM7 = 6;
+  TM8_V920 = 7;
+  TX_MODE_T_NULLTYPE = 8;
+}
+
+enum CODEBOOK_T {
+  N2_TX_ANT_TM3 = 0;
+  N4_TX_ANT_TM3 = 1;
+  N2_TX_ANT_TM4 = 2;
+  N4_TX_ANT_TM4 = 3;
+  N2_TX_ANT_TM5 = 4;
+  N4_TX_ANT_TM5 = 5;
+  N2_TX_ANT_TM6 = 6;
+  N4_TX_ANT_TM6 = 7;
+  CODEBOOK_T_NONE = 8;
+}
+
+enum UE_TX_ANT_SEL_T {
+  UE_TX_ANT_SEL_T_RELEASE = 0;
+  UE_TX_ANT_SEL_T_CLOSED_LOOP = 1;
+  UE_TX_ANT_SEL_T_OPEN_LOOP = 2;
+}
+
+message ant_info_ded_t {
+  TX_MODE_T          tx_mode = 1;
+  CODEBOOK_T         cookbook_subset_type = 2;
+  uint64             codebook_subset_restrict = 3;
+  UE_TX_ANT_SEL_T    ue_tx_ant_sel = 4;
+}
+
+message ue_bearer_cfg_t {
+  int32         priority = 1;
+  uint32        bsd = 2; // msec
+  uint32        pbr = 3;
+  int32         group = 4;
+  DIRECTION_T   direction = 5;
+}
+
+message srsran_cqi_cfg_t {// SRSRAN_API
+  bool               data_enable = 1;
+  bool               pmi_present = 2;
+  bool               four_antenna_ports = 3;    ///< If cell has 4 antenna ports then true otherwise false
+  bool               rank_is_not_one = 4;       ///< If rank > 1 then true otherwise false
+  bool               subband_label_2_bits = 5;  ///< false, label=1-bit, true label=2-ack_value
+  uint32             scell_index = 6;           ///< Indicates the cell/carrier the measurement belongs, use 0 for PCell
+  uint32             L = 7;
+  uint32             N = 8;
+  srsran_cqi_type_t  type = 9;
+  uint32             ri_len = 10;
+}
+
+message srsran_uci_cfg_ack_t {// SRSRAN_API
+  repeated bool       pending_tb = 1; // MAX 2 -SRSRAN_MAX_CODEWORDS- Indicates whether there was a grant that requires an ACK/NACK
+  uint32              nof_acks = 2; //< Number of transport blocks, deduced from transmission mode
+  repeated uint32     ncce = 3; // MAX 9 -SRSRAN_UCI_MAX_M-
+  uint32              N_bundle = 4;
+  uint32              tdd_ack = 5; // tdd_ack_M
+  uint32              tdd_ack_m = 6;
+  bool                tdd_is_multiplex = 7;
+  uint32              tpc_for_pucch = 8;
+  uint32              grant_cc_idx = 9;
+}
+
+message srsran_uci_cfg_t {// SRSRAN_API
+  repeated srsran_uci_cfg_ack_t    ack = 1; //MAX 5 - SRSRAN_MAX_CARRIERS - Maximum number of supported simultaneous carriers
+  srsran_cqi_cfg_t                 cqi = 2;
+  bool                             is_scheduling_request_tti = 3;
+}
+
+message srsran_pucch_cfg_t {// SRSRAN_API
+  uint32                            rnti = 1; // Input configuration for this subframe
+  srsran_uci_cfg_t                  uci_cfg = 2; // UCI configuration
+  uint32                            delta_pucch_shift = 3;
+  uint32                            n_rb_2 = 4;
+  uint32                            N_cs = 5;
+  uint32                            N_pucch_v = 6; // N_pucch_1
+  bool                              group_hopping_en = 7; // common pusch config
+  uint32                            I_sr = 8;
+  bool                              sr_configured = 9;
+  repeated uint32                   n_pucch_1 = 10; // MAX 4 < n_pucch resources specified by RRC
+  uint32                            n_pucch_2 = 11;
+  uint32                            n_pucch_sr = 12;
+  bool                              simul_cqi_ack = 13;
+  bool                              tdd_ack_multiplex = 14; // if false, bundle
+  bool                              sps_enabled = 15;
+  srsran_ack_nack_feedback_mode_t   ack_nack_feedback_mode = 16;
+  repeated uint32                   n1_pucch_an_cs = 17; // 2D array [4][2] to 1D array [4 x 2]
+  repeated uint32                   n3_pucch_an_list = 18; // MAX 4
+  float                             threshold_format1 = 19;
+  float                             threshold_data_valid_format1a = 20;
+  float                             threshold_data_valid_format2 = 21;
+  float                             threshold_data_valid_format3 = 22;
+  float                             threshold_dmrs_detection = 23;
+  bool                              meas_ta_en = 24;
+  srsran_pucch_format_t             format = 25;
+  uint32                            n_pucch = 26;
+  repeated uint32                   pucch2_drs_bits = 27; // SRSRAN_PUCCH_MAX_BITS = 64
+}
+
+message srsran_uci_offset_cfg_t {// SRSRAN_API
+  uint32   I_offset_cqi = 1;
+  uint32   I_offset_ri = 2;
+  uint32   I_offset_ack = 3;
+}
+
+message srsran_dci_cfg_t {
+  bool  multiple_csi_request_enabled = 1;
+  bool  cif_enabled = 2;
+  bool  cif_present = 3;
+  bool  srs_request_enabled = 4;
+  bool  ra_format_enabled = 5;
+  bool  is_not_ue_ss = 6;
+}
+
+message srsran_ra_tb_t {// SRSRAN_API
+  srsran_mod_t   mod = 1;
+  int32          tbs = 2;
+  int32          rv = 3;
+  uint32         nof_bits = 4;
+  uint32         cw_idx = 5;
+  bool           enabled = 6;
+  uint32         mcs_idx = 7; // this is for debugging and metrics purposes
+}
+
+message srsran_pdsch_grant_t {// SRSRAN_API
+  srsran_tx_scheme_t         tx_scheme = 1;
+  uint32                     pmi = 2;
+  uint32                     nof_prb = 4;
+  uint32                     nof_re = 5;
+  uint32                     nof_tb = 9;
+  uint32                     nof_layers = 10;
+  repeated bool              prb_idx = 3;// 2D array [2][SRSRAN_MAX_PRB] to 1D array of [2 x 110]
+  repeated uint32            nof_symb_slot = 6; // [2] MAX 2
+  repeated int32             last_tbs = 8; // [SRSRAN_MAX_CODEWORDS] MAX 2
+  repeated srsran_ra_tb_t    tb = 7; // [SRSRAN_MAX_CODEWORDS] MAX 2
+}
+
+message srsran_cqi_report_cfg_t {
+  bool                       periodic_configured = 1;
+  bool                       aperiodic_configured = 2;
+  uint32                     pmi_idx = 3;
+  uint32                     ri_idx = 4;
+  bool                       ri_idx_present = 5;
+  bool                       format_is_subband = 6;
+  uint32                     subband_size = 7;
+  srsran_cqi_report_mode_t   periodic_mode = 8;
+  srsran_cqi_report_mode_t   aperiodic_mode = 9;
+}
+
+message srsran_softbuffer_rx_t {// SRSRAN_API
+  uint32             max_cb = 1; // softbuffer size
+  uint32             max_cb_size = 2;
+  bool               tb_crc = 6;
+  repeated int32     buffer_f = 3; // 2D array [max_cb][max_cb_size] to 1D array [max_cb x max_cb_size]
+  repeated uint32    data = 4; // 2D array [max_cb][max_cb_size/8] to 1D array [max_cb x max_cb_size/8]
+  repeated bool      cb_crc = 5; // array of size max_cb
+}
+
+message srsran_softbuffer_tx_t {// SRSRAN_API
+  uint32             max_cb = 1; // softbuffer size
+  uint32             max_cb_size = 2;
+  repeated uint32    buffer_b = 3; // 2D array [max_cb][max_cb_size] to 1D array [max_cb x max_cb_size]
+}
+
+message srsran_pdsch_cfg_t {// SRSRAN_API
+  srsran_pdsch_grant_t               grant = 1;
+  uint32                             rnti = 2;
+  uint32                             max_nof_iterations = 3;
+  srsran_mimo_decoder_t              decoder_type = 4;
+  float                              p_a = 5;
+  uint32                             p_b = 6;
+  float                              rs_power = 7;
+  bool                               power_scale = 8;
+  bool                               csi_enable = 9;
+  bool                               use_tbs_index_alt = 10;
+  repeated srsran_softbuffer_tx_t    tx = 11; // union softbuffers -> *tx[SRSRAN_MAX_CODEWORDS] MAX 2
+  repeated srsran_softbuffer_rx_t    rx = 12; // union softbuffers -> *rx[SRSRAN_MAX_CODEWORDS] MAX 2
+  bool                               meas_evm_en = 13;
+  bool                               meas_time_en = 14;
+  uint32                             meas_time_value = 15;
+}
+
+message srsran_dl_cfg_t {//SRSRAN_API
+  srsran_cqi_report_cfg_t   cqi_report = 1;
+  srsran_pdsch_cfg_t        pdsch = 2;
+  srsran_dci_cfg_t          dci = 3;
+  srsran_tm_t               tm = 4;
+  bool                      dci_common_ss = 5;
+}
+
+message cc_cfg_t {
+  bool                       active = 1;
+  uint32                     enb_cc_idx = 2; ///< eNB CC index
+  srsran_dl_cfg_t            dl_cfg = 3; // array
+  uint32                     aperiodic_cqi_period = 4; // if 0 is periodic CQI
+}
+
+message ue_cfg_t {
+  uint32                             maxharq_tx = 1;
+  bool                               continuous_pusch = 2;
+  srsran_uci_offset_cfg_t            uci_offset = 3; // {15, 12, 10}
+  srsran_pucch_cfg_t                 pucch_cfg = 4;
+  repeated ue_bearer_cfg_t           ue_bearers = 5;// MAX 11
+  repeated cc_cfg_t                  supported_cc_list = 6; ///< list of UE supported CCs. First index for PCell
+  ant_info_ded_t                     dl_ant_info = 7;
+  bool                               use_tbs_index_alt = 8;
+  uint32                             measgap_period = 9;
+  uint32                             measgap_offset = 10;
+  UL64QAM_CAP                        support_ul64qam = 11;
+}

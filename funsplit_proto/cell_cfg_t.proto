@@ -1,0 +1,90 @@
+syntax = "proto3";
+package fs.mac_rrc;
+
+enum SRSRAN_CP {/*srsran_cp_t*/
+  SRSRAN_CP_NORM = 0;
+  SRSRAN_CP_EXT = 1;
+}
+
+enum SRSRAN_PHICH_LENGTH {/*SRSRAN_API srsran_phich_length_t*/
+  SRSRAN_PHICH_NORM = 0;
+  SRSRAN_PHICH_EXT = 1;
+}
+
+enum SRSRAN_PHICH_R {/*SRSRAN_API srsran_phich_r_t*/
+  SRSRAN_PHICH_R_1_6 = 0;
+  SRSRAN_PHICH_R_1_2 = 1;
+  SRSRAN_PHICH_R_1 = 2;
+  SRSRAN_PHICH_R_2 = 3;
+}
+
+enum SRSRAN_FRAME_TYPE {/*SRSRAN_API srsran_frame_type_t*/
+  SRSRAN_FDD = 0;
+  SRSRAN_TDD = 1;
+}
+
+enum HOP_MODE {/* hop_mode */
+  SRSRAN_PUSCH_HOP_MODE_INTRA_SF = 0;
+  SRSRAN_PUSCH_HOP_MODE_INTER_SF = 1;
+}
+
+message srsran_pusch_hopping_cfg_t{
+  HOP_MODE hop_mode = 1;
+  uint32   hopping_offset = 2;
+  uint32   n_sb = 3;
+  uint32   n_rb_ho = 4;
+  uint32   current_tx_nb = 5;
+  bool     hopping_enabled = 6;
+}
+
+message cell_cfg_sib_t{
+  uint32 len = 1;
+  uint32 period_rf = 2;
+}
+
+message srsran_cell_t {/*SRSRAN_API*/
+  uint32              nof_prb = 1;
+  uint32              nof_ports = 2;
+  uint32              id = 3;
+  SRSRAN_CP           cp = 4;
+  SRSRAN_PHICH_LENGTH phich_length = 5;
+  SRSRAN_PHICH_R      phich_resources = 6;
+  SRSRAN_FRAME_TYPE   frame_type = 7;
+}
+
+message scell_cfg_t {
+  uint32   enb_cc_idx               = 1;
+  bool     cross_carrier_scheduling = 2;
+  bool     ul_allowed               = 3;
+}
+
+message cell_cfg_t {
+  srsran_cell_t              cell = 1;
+  repeated                   cell_cfg_sib_t sibs = 2; //[MAX_SIBS];
+  uint32                     si_window_ms = 3;
+  float                      target_pucch_ul_sinr = 4;
+  srsran_pusch_hopping_cfg_t pusch_hopping_cfg = 5;
+  float                      target_pusch_ul_sinr = 6;
+  bool                       enable_phr_handling = 7;
+  bool                       enable_64qam = 8;
+  uint32                     prach_config = 9;
+  uint32                     prach_nof_preambles = 10;
+  uint32                     prach_freq_offset = 11;
+  uint32                     prach_rar_window = 12;
+  uint32                     prach_contention_resolution_timer = 13;
+  uint32                     maxharq_msg3tx = 14;
+  uint32                     n1pucch_an = 15;
+  uint32                     delta_pucch_shift = 16;
+  int32                      nrb_pucch = 17;
+  uint32                     nrb_cqi = 18;
+  uint32                     ncs_an = 19;
+  uint32                     initial_dl_cqi = 20;
+  uint32                     srs_subframe_config = 21;
+  uint32                     srs_subframe_offset = 22;
+  uint32                     srs_bw_config = 23;
+  repeated scell_cfg_t       scell_list = 24;/*vect<scell_cfg_t>*/
+}
+
+message vect_cell_cfg_t {
+  repeated cell_cfg_t vect = 1;/*vect<cell_cfg_t>*/
+}

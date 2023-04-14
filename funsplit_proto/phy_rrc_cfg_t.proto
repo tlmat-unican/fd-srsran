@@ -1,0 +1,127 @@
+syntax = "proto3";
+package fs.phy_rrc;
+
+// package fs.mac_rrc;
+import "ue_cfg_t.proto";
+import "cell_cfg_t.proto";
+
+// srsran_dl_cfg_t --> described in ue_cfg_t.proto
+// srsran_pucch_cfg_t --> described in ue_cfg_t.proto
+// srsran_softbuffer_tx_t & srsran_softbuffer_rx_t --> described in ue_cfg_t.proto
+// srsran_uci_cfg_t --> described in ue_cfg_t.proto
+// srsran_uci_offset_cfg_t --> described in ue_cfg_t.proto
+// srsran_ra_tb_t --> described in ue_cfg_t.proto
+// srsran_pusch_hopping_cfg_t --> described in cell_cfg_t.proto
+
+message srsran_tdd_config_t {
+    bool      configured = 1; /// Set to true when the fields have been configured, otherwise false.
+    uint32    sf_config = 2; /// Uplink-downlink configuration, valid range is [0,SRSRAN_MAX_TDD_SF_CONFIGS[. TS 36.211 v8.9.0 Table 4.2-2.
+    uint32    ss_config = 3; /// Special subframe symbol length configuration, valid range is [0,SRSRAN_MAX_TDD_SS_CONFIGS[. TS 36.211 v13.13.0 Table 4.2-1.
+}
+
+message srsran_prach_cfg_t {
+    bool                  is_nr = 1; // Set to true if NR
+    bool                  hs_flag = 2;
+    bool                  enable_successive_cancellation = 3;
+    bool                  enable_freq_domain_offset_calc = 4;
+    uint32                config_idx = 5;
+    uint32                root_seq_idx = 6;
+    uint32                zero_corr_zone = 7;
+    uint32                freq_offset = 8;
+    uint32                num_ra_preambles = 9;
+    srsran_tdd_config_t   tdd_config = 10;
+}
+
+message srsran_refsignal_srs_cfg_t {
+    bool      simul_ack = 1;
+    bool      dedicated_enabled = 2;
+    bool      common_enabled = 3;
+    bool      configured = 4;
+    uint32    subframe_config = 5;
+    uint32    bw_cfg = 6;
+    uint32    B = 7;
+    uint32    b_hop = 8;
+    uint32    n_srs = 9;
+    uint32    I_srs = 10;
+    uint32    k_tc = 11;
+    uint32    n_rrc = 12;
+}
+
+message srsran_refsignal_dmrs_pusch_cfg_t {
+    bool      group_hopping_en = 1;
+    bool      sequence_hopping_en = 2;
+    uint32    cyclic_shift = 3;
+    uint32    delta_ss = 4;
+}
+
+message srsran_ue_ul_powerctrl_t {
+    bool              delta_mcs_based = 1;
+    bool              acc_enabled = 2;
+    float             p0_nominal_pusch = 3;
+    float             alpha = 4;
+    float             p0_nominal_pucch = 5;
+    float             delta_preamble_msg3 = 6;
+    float             p0_ue_pusch = 7;
+    float             p0_ue_pucch = 8;
+    float             p_srs_offset = 9;
+    repeated float    delta_f_pucch = 10; // [5]
+}
+
+message srsran_pusch_grant_t {
+    bool                        is_rar = 1;
+    uint32                      n_dmrs = 2;
+    uint32                      L_prb = 3;
+    uint32                      freq_hopping = 4;
+    uint32                      nof_re = 5;
+    uint32                      nof_symb = 6;
+    fs.mac_rrc.srsran_ra_tb_t   tb = 7;
+    fs.mac_rrc.srsran_ra_tb_t   last_tb = 8;
+    repeated uint32             n_prb = 9;       // [2] rb_start after frequency hopping
+    repeated uint32             n_prb_tilde = 10; // [2] rb_start after frequency hopping per retx
+}
+
+message srsran_pusch_cfg_t {
+    uint32                                       rnti = 1;
+    uint32                                       max_nof_iterations = 2;
+    uint32                                       last_O_cqi = 3;
+    uint32                                       K_segm = 4;
+    uint32                                       current_tx_nb = 5;
+    bool                                         csi_enable = 6;
+    bool                                         enable_64qam = 7;
+    bool                                         meas_time_en = 8;
+    uint32                                       meas_time_value = 9;
+    bool                                         meas_epre_en = 10;
+    bool                                         meas_ta_en = 11;
+    bool                                         meas_evm_en = 12;
+    fs.mac_rrc.srsran_uci_cfg_t                  uci_cfg = 13;
+    fs.mac_rrc.srsran_uci_offset_cfg_t           uci_offset = 14;
+    srsran_pusch_grant_t                         grant = 15;
+    repeated fs.mac_rrc.srsran_softbuffer_tx_t   tx = 16; // union softbuffers -> *tx[SRSRAN_MAX_CODEWORDS] MAX 2
+    repeated fs.mac_rrc.srsran_softbuffer_rx_t   rx = 17; // union softbuffers -> *rx[SRSRAN_MAX_CODEWORDS] MAX 2
+}
+
+message srsran_ul_cfg_t {
+    fs.mac_rrc.srsran_pucch_cfg_t              pucch = 1;
+    fs.mac_rrc.srsran_pusch_hopping_cfg_t      hopping = 2;
+    srsran_pusch_cfg_t                         pusch = 3;
+    srsran_ue_ul_powerctrl_t                   power_ctrl = 4;
+    srsran_refsignal_dmrs_pusch_cfg_t          dmrs = 5;
+    srsran_refsignal_srs_cfg_t                 srs = 6;
+}
+
+message phy_cfg_t {
+    bool                           prach_cfg_present = 1;
+    fs.mac_rrc.srsran_dl_cfg_t     dl_cfg = 2;
+    srsran_ul_cfg_t                ul_cfg = 3;
+    srsran_prach_cfg_t             prach_cfg = 4;
+}
+
+message phy_rrc_cfg_t {
+    bool         configured = 1; ///< Indicates whether PHY shall consider configuring this cell/carrier
+    uint32       enb_cc_idx = 2; ///< eNb Cell index
+    phy_cfg_t    phy_cfg    = 3; ///< Dedicated physical layer configuration
+}
+
+message phy_rrc_cfg_list_t {
+    repeated phy_rrc_cfg_t list = 1; // std::vector<phy_rrc_cfg_t>
+}

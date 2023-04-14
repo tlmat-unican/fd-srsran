@@ -1,0 +1,165 @@
+syntax = "proto3";
+package fs.mac_rrc;
+
+enum repeat_period_t {
+  repeat_period_nulltype   = 0;
+  repeat_period_rf32       = 1;
+  repeat_period_rf64       = 2;
+  repeat_period_rf128      = 3;
+  repeat_period_rf256      = 4;
+}
+
+enum mod_period_t {
+  mod_period_rf512   = 0;
+  mod_period_rf1024   = 1;
+}
+
+enum sig_mcs_t {
+  sig_mcs_n2        = 0;
+  sig_mcs_n7        = 1;
+  sig_mcs_n13       = 2;
+  sig_mcs_n19       = 3;
+  sig_mcs_nulltype  = 4;
+}
+
+enum coeff_t {
+  coeff_n2 = 0;
+  coeff_n4 = 1;
+}
+
+enum region_len_t {
+  region_len_s1 = 0;
+  region_len_s2 = 1;
+  region_len_nulltype = 2;
+}
+
+enum plmn_id_type_t {
+  plmn_idx        = 0;
+  explicit_value  = 1;
+}
+
+enum mch_sched_period_t {
+  mch_sched_period_rf8       = 0;
+  mch_sched_period_rf16      = 1;
+  mch_sched_period_rf32      = 2;
+  mch_sched_period_rf64      = 3;
+  mch_sched_period_rf128     = 4;
+  mch_sched_period_rf256     = 5;
+  mch_sched_period_rf512     = 6;
+  mch_sched_period_rf1024    = 7;
+  mch_sched_period_nulltype  = 8;
+}
+
+enum alloc_period_t {
+  alloc_period_n1        = 0;
+  alloc_period_n2        = 1;
+  alloc_period_n4        = 2;
+  alloc_period_n8        = 3;
+  alloc_period_n16       = 4;
+  alloc_period_n32       = 5;
+  alloc_period_nulltype  = 6;
+}
+
+enum sf_alloc_type_t {
+  sf_alloc_type_one_frame    = 0;
+  sf_alloc_type_four_frames  = 1;
+  sf_alloc_type_nulltype     = 2;
+}
+
+enum common_sf_alloc_period_t {
+  common_sf_alloc_period_nulltype  = 0;
+  common_sf_alloc_period_rf4       = 1;
+  common_sf_alloc_period_rf8       = 2;
+  common_sf_alloc_period_rf16      = 3;
+  common_sf_alloc_period_rf32      = 4;
+  common_sf_alloc_period_rf64      = 5;
+  common_sf_alloc_period_rf128     = 6;
+  common_sf_alloc_period_rf256     = 7;
+}
+
+message plmn_id_t {
+  uint32             nof_mnc_digits  = 1;
+  repeated uint32    mcc             = 2; // max 3
+  repeated uint32    mnc             = 3; // max 3
+}
+
+message choice {
+  uint32      plmn_idx        = 1;
+  plmn_id_t   explicit_value  = 2;
+}
+
+message tmgi_t {
+  choice               plmn_id       = 1; // union
+  plmn_id_type_t       plmn_id_type  = 2;
+  repeated uint32      serviced_id   = 3; // max 3
+}
+
+message mbms_session_info_t {
+  uint32     lc_ch_id            = 1;
+  uint32     session_id          = 2;
+  bool       session_id_present  = 3;
+  tmgi_t     tmgi                = 4;
+}
+
+message pmch_info_t {
+  uint32                          data_mcs                = 1;
+  uint32                          sf_alloc_end            = 2;
+  uint32                          nof_mbms_session_info   = 3;
+  uint32                          max_session_per_pmch    = 4;
+  mch_sched_period_t              mch_sched_period        = 5;
+  repeated mbms_session_info_t    mbms_session_info_list  = 6; // [max_session_per_pmch]
+}
+
+message mbsfn_sf_cfg_t {
+  uint32             sf_alloc                  = 1;
+  uint32             radioframe_alloc_offset   = 2;
+  alloc_period_t     radioframe_alloc_period   = 3;
+  sf_alloc_type_t    nof_alloc_subfrs          = 4;
+}
+
+message mcch_msg_t {
+  uint32                      nof_pmch_info            = 1;
+  uint32                      nof_common_sf_alloc      = 2;
+  common_sf_alloc_period_t    common_sf_alloc_period   = 3;
+  repeated mbsfn_sf_cfg_t     common_sf_alloc          = 4; // [8]
+  repeated pmch_info_t        pmch_info_list           = 5; // [15]
+}
+
+message mbms_notif_cfg_t {
+  uint32   notif_offset        = 1;
+  uint32   notif_sf_idx        = 2;
+  coeff_t  notif_repeat_coeff  = 3;
+}
+
+message mcch_cfg_t {
+  uint32           sf_alloc_info        = 1;
+  uint32           mcch_offset          = 2;
+  sig_mcs_t        sig_mcs              = 3;
+  mod_period_t     mcch_mod_period      = 4;
+  repeat_period_t  mcch_repeat_period   = 5;
+}
+
+message mbsfn_area_info_t {
+  uint32        mbsfn_area_id          = 1;
+  uint32        notif_ind              = 2;
+  mcch_cfg_t    mcch_cfg               = 3;
+  region_len_t  non_mbsfn_region_len   = 4;
+}
+
+message sib13_t {
+  uint32                       max_mbsfn_area         = 1;
+  uint32                       nof_mbsfn_area_info    = 2;
+  mbms_notif_cfg_t             notif_cfg              = 3;
+  repeated mbsfn_area_info_t   mbsfn_area_info_list   = 4; // [max_mbsfn_area]
+}
+
+message sib2_mbms_t {
+  int32                      nof_mbsfn_sf_cfg           = 1;
+  bool                       mbsfn_sf_cfg_list_present  = 2;
+  uint32                     max_nof_mbsfn_sf_cfg       = 3;
+  repeated mbsfn_sf_cfg_t    mbsfn_sf_cfg_list          = 4; // [max_nof_mbsfn_sf_cfg]
+}
+
+message buffer {
+  repeated uint32 data = 1;
+}

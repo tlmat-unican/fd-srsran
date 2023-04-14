@@ -1,0 +1,63 @@
+
+syntax = "proto3";
+package fs.rlc;
+
+enum srsran_rat_t { 
+  lte= 0;
+  nr = 1; 
+  rat_nulltype = 2;
+};
+
+enum rlc_mode_t { 
+  tm = 0;
+  um = 1; 
+  am = 2; 
+  mode_nulltype = 3; 
+};
+
+enum rlc_umd_sn_size_t{
+  size5bits = 0;
+  size10bits = 1;
+  umd_nulltype = 2;
+} 
+
+enum rlc_um_nr_sn_size_t { 
+  size6bits = 0;
+  size12bits = 1; 
+  um_nulltype =2; 
+};
+
+message rlc_config_t  {
+  srsran_rat_t rat = 1;
+  rlc_mode_t rlc_mode = 2;
+  rlc_am_config_t am = 3;
+  rlc_um_config_t um = 4;
+  rlc_um_nr_config_t um_nr = 5;
+  uint32 tx_queue_length = 6;
+} 
+
+message rlc_am_config_t{
+  uint32 t_poll_retx        = 1;
+  uint32 poll_pdu           = 2;
+  uint32 poll_byte          = 3;
+  uint32 max_retx_thresh    = 4;
+  uint32 t_reordering       = 5;
+  uint32 t_status_prohibit  = 6;
+} 
+
+message rlc_um_config_t{
+  uint32 t_reordering       = 1;
+  rlc_umd_sn_size_t tx_sn_field_length = 2;
+  rlc_umd_sn_size_t rx_sn_field_length = 3;
+  uint32 rx_window_size = 4;
+  uint32 rx_mod = 5;
+  uint32 tx_mod = 6;
+  bool is_mrb = 7;
+} 
+
+message rlc_um_nr_config_t{
+  rlc_um_nr_sn_size_t sn_field_length = 1;
+  uint32 UM_Window_Size = 2;
+  uint32 mod = 3;
+  int32 t_reassembly_ms = 4;
+} 

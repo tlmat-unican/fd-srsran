@@ -1,6 +1,11 @@
 # Fully saggregated srsRAN
 
-This repository provides an experimental implementation of a fully disaggregated eNodeB based on the srsRAN project
+This repository provides an experimental implementation of a fully disaggregated eNodeB based on the srsRAN project 
+
+## Implementation design 
+
+![This is the caption\label{mylabel}](./figs/classDiagramMod.png)
+
 
 ## Requirements
 
